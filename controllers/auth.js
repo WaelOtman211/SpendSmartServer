@@ -314,10 +314,75 @@ export const getIncomes = async (req, res) => {
         });
     }
 };
-export const insertIncomes = async (req, res) => {
-    console.log("insertIncomes- >")
+export const insertExpenses = async (req, res) => {
     try {
-        const { user_id, yearNumber, monthNumber, name, amount, tracked, percentage } = req.body;
+        const { user_id, name, tracked, budget, yearNumber, monthNumber } = req.body;
+
+        if (!name || !tracked || !budget || !yearNumber || !monthNumber) {
+            return res.json({
+                error: "Name, Tracked, Budget, YearNumber, and MonthNumber are required",
+            });
+        }
+
+        const user = await User.findById(user_id);
+        if (!user) {
+            return res.json({
+                error: "User not found",
+            });
+        }
+
+        const expense = new Expenses({
+            name,
+            tracked,
+            budget,
+        });
+
+        let year = user.years.find((y) => y.yearNumber == yearNumber);
+        // If the year is not found, create a new one
+        if (!year) {
+            console.log("create new year")
+            year = { yearNumber, months: [] };
+            const month = { MonthNumber: monthNumber, expenses: [expense] };
+            year.months.push(month);
+            user.years.push(year);
+            await user.save();
+            return res.json({
+                message: "Expense added successfully",
+                expense,
+            });
+        }
+
+        let month = year.months.find((m) => m.MonthNumber == monthNumber);
+
+        // If the month is not found, create a new one
+        if (!month) {
+            month = { MonthNumber: monthNumber, expenses: [expense] };
+            year.months.push(month);
+            await user.save();
+            return res.json({
+                message: "Expense added successfully",
+                expense,
+            });
+        }
+
+        month.expenses.push(expense);
+
+        await user.save();
+
+        return res.json({
+            message: "Expense added successfully",
+            expense,
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            error: "Internal Server Error",
+        });
+    }
+};
+export const insertIncomes = async (req, res) => {
+    try {
+        const { user_id, yearNumber, monthNumber, name, amount,tracked, percentage } = req.body;
 
         if (!name || !amount || !percentage || !tracked || !yearNumber || !monthNumber) {
             return res.json({
@@ -331,7 +396,7 @@ export const insertIncomes = async (req, res) => {
                 error: "User not found",
             });
         }
-
+   
 
         const income = new Incomes({
             name,
@@ -351,7 +416,7 @@ export const insertIncomes = async (req, res) => {
             await user.save();
             return
         }
-
+        
         let month = year.months.find((m) => m.MonthNumber == monthNumber);
 
         // If the month is not found, create a new one
@@ -361,13 +426,10 @@ export const insertIncomes = async (req, res) => {
             await user.save();
             return
         }
-
+       
         month.incomes.push(income);
-        await user.save();
-        return res.json({
-            message: "income added successfully",
-            income,
-        });
+        await user.save(); 
+
     } catch (err) {
         console.log(err);
         return res.status(500).json({
@@ -375,6 +437,8 @@ export const insertIncomes = async (req, res) => {
         });
     }
 };
+
+
 export const updateAmount = async (req, res) => {
     console.log("updateAmount -->")
     try {
@@ -517,72 +581,7 @@ export const getExpenses = async (req, res) => {
         });
     }
 };
-export const insertExpenses = async (req, res) => {
-    try {
-        const { user_id, name, tracked, budget, yearNumber, monthNumber } = req.body;
 
-        if (!name || !tracked || !budget || !yearNumber || !monthNumber) {
-            return res.json({
-                error: "Name, Tracked, Budget, YearNumber, and MonthNumber are required",
-            });
-        }
-
-        const user = await User.findById(user_id);
-        if (!user) {
-            return res.json({
-                error: "User not found",
-            });
-        }
-
-        const expense = new Expenses({
-            name,
-            tracked,
-            budget,
-        });
-
-        let year = user.years.find((y) => y.yearNumber == yearNumber);
-        // If the year is not found, create a new one
-        if (!year) {
-            console.log("create new year")
-            year = { yearNumber, months: [] };
-            const month = { MonthNumber: monthNumber, expenses: [expense] };
-            year.months.push(month);
-            user.years.push(year);
-            await user.save();
-            return res.json({
-                message: "Expense added successfully",
-                expense,
-            });
-        }
-
-        let month = year.months.find((m) => m.MonthNumber == monthNumber);
-
-        // If the month is not found, create a new one
-        if (!month) {
-            month = { MonthNumber: monthNumber, expenses: [expense] };
-            year.months.push(month);
-            await user.save();
-            return res.json({
-                message: "Expense added successfully",
-                expense,
-            });
-        }
-
-        month.expenses.push(expense);
-
-        await user.save();
-
-        return res.json({
-            message: "Expense added successfully",
-            expense,
-        });
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({
-            error: "Internal Server Error",
-        });
-    }
-};
 export const deleteExpense = async (req, res) => {
     try {
         const { expenseId } = req.params;
