@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
-
 const expensesSchema = new Schema(
     {
         name: {
@@ -11,16 +10,17 @@ const expensesSchema = new Schema(
         tracked: {
             type: String,
             trim: true,
-            required: false, // Allow null or undefined values
+            required: true,
+          
         },
         budget: {
             type: String,
-            required: false,
+            required: true,
             min: 6,
             max: 64,
         },
+      
     },
     { timestamps: true }
 );
-
 export default mongoose.model("Expenses", expensesSchema);

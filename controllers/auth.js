@@ -381,9 +381,10 @@ export const insertExpenses = async (req, res) => {
     }
 };
 export const insertIncomes = async (req, res) => {
+    console.log("insertIncomes- >")
     try {
-        const { user_id, yearNumber, monthNumber, name, amount,tracked, percentage } = req.body;
-
+        const { user_id, yearNumber, monthNumber, name, amount, tracked, percentage } = req.body;
+console
         if (!name || !amount || !percentage || !tracked || !yearNumber || !monthNumber) {
             return res.json({
                 error: "Name, Amount, Percentage, Tracked, YearNumber, and MonthNumber are required",
@@ -396,7 +397,7 @@ export const insertIncomes = async (req, res) => {
                 error: "User not found",
             });
         }
-   
+
 
         const income = new Incomes({
             name,
@@ -413,10 +414,16 @@ export const insertIncomes = async (req, res) => {
             const month = { MonthNumber: monthNumber, incomes: [income] };
             year.months.push(month);
             user.years.push(year);
+            
             await user.save();
-            return
+            
+            console.log("insert to here")
+            return res.json({
+                message: "incomes added successfully",
+                income,
+            });
         }
-        
+
         let month = year.months.find((m) => m.MonthNumber == monthNumber);
 
         // If the month is not found, create a new one
@@ -424,12 +431,18 @@ export const insertIncomes = async (req, res) => {
             month = { MonthNumber: monthNumber, incomes: [income] };
             year.months.push(month);
             await user.save();
-            return
+            return res.json({
+                message: "incomes added successfully",
+                income,
+            });
         }
-       
-        month.incomes.push(income);
-        await user.save(); 
 
+        month.incomes.push(income);
+        await user.save();
+        return res.json({
+            message: "income added successfully",
+            income,
+        });
     } catch (err) {
         console.log(err);
         return res.status(500).json({
@@ -437,8 +450,6 @@ export const insertIncomes = async (req, res) => {
         });
     }
 };
-
-
 export const updateAmount = async (req, res) => {
     console.log("updateAmount -->")
     try {

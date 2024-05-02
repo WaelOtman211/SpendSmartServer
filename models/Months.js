@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Expenses from "./Expenses.js";
 import Incomes from "./Incomes.js";
-
+import Goals from "./Goals.js";
 
 const { Schema } = mongoose;
 const MonthsSchema = new Schema(
@@ -13,7 +13,7 @@ const MonthsSchema = new Schema(
 
         },
  
-        expenses:[Expenses.schema] ,
+        expenses: [Expenses.schema],
         incomes: [Incomes.schema],
    
       
