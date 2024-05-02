@@ -16,7 +16,7 @@ const incomesSchema = new Schema(
         tracked: {
             type: String,
             trim: true,
-            required: true,
+            required: false,
              
         },
         percentage: {

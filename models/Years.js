@@ -12,10 +12,6 @@ const YearsSchema = new Schema(
         },
         
         months: [Months.schema],
-
-      
-       
-     
        
     },
     { timestamps: true }
