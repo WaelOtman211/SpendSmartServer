@@ -383,11 +383,11 @@ export const insertExpenses = async (req, res) => {
 export const insertIncomes = async (req, res) => {
     console.log("insertIncomes- >")
     try {
-        const { user_id, yearNumber, monthNumber, name, amount, tracked, percentage } = req.body;
+        const { user_id, yearNumber, monthNumber, name, amount, tracked } = req.body;
 console
-        if (!name || !amount || !percentage || !tracked || !yearNumber || !monthNumber) {
+        if (!name || !amount || !tracked || !yearNumber || !monthNumber) {
             return res.json({
-                error: "Name, Amount, Percentage, Tracked, YearNumber, and MonthNumber are required",
+                error: "Name, Amount, Tracked, YearNumber, and MonthNumber are required",
             });
         }
 
@@ -403,7 +403,7 @@ console
             name,
             amount,
             tracked,
-            percentage,
+            
         });
 
         let year = user.years.find((y) => y.yearNumber == yearNumber);

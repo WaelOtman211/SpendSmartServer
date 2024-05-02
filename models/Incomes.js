@@ -19,12 +19,7 @@ const incomesSchema = new Schema(
             required: true,
              
         },
-        percentage: {
-            type: String,
-            required: true,
-            min: 6,
-            max: 64,
-        },
+       
       
     },
     { timestamps: true }
