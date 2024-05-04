@@ -7,7 +7,7 @@ import Months from "../models/Months.js";
 import { hashPassword, comparePassword } from "../helpers/auth.js";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
-
+ 
 dotenv.config();
 
 
@@ -37,10 +37,10 @@ export const updateInvestAmount = async (req, res) => {
     }
 };
 
-export const getSavings = async (req, res) => {
+export const getSavings=async (req,res)=>{
     console.log("getSavings -> ")
     const user = await User.findById('645006320188d6681b4db8f4')
-    const savings = user.savings
+    const savings=user.savings
     return res.json({
         message: "Savings returned successfully",
         savings,
@@ -48,10 +48,10 @@ export const getSavings = async (req, res) => {
 }
 
 
-export const updateSavings = async (req, res) => {
+export const updateSavings=async (req,res)=>{
     console.log("upSavingsAmount->")
-    const newSavingsAmount = req.body.savings; // Assuming newInvestAmount is provided in the request body
-    console.log("newSavingsAmount ", newSavingsAmount)
+    const newSavingsAmount  = req.body.savings; // Assuming newInvestAmount is provided in the request body
+    console.log("newSavingsAmount ",newSavingsAmount)
     try {
         // Find the user by ID and update their investAmount
         const user = await User.findByIdAndUpdate('645006320188d6681b4db8f4', { savings: newSavingsAmount }, { new: true });
@@ -74,12 +74,12 @@ export const updateSavings = async (req, res) => {
 }
 
 
-export const getInvestAmount = async (req, res) => {
+export const getInvestAmount=async (req,res)=>{
     console.log("getInvestAmount -> ")
     const user = await User.findById('645006320188d6681b4db8f4')
     console.log("found user")
-    const investAmount = user.investAmount
-    console.log("investAmount " + { investAmount })
+    const investAmount=user.investAmount
+    console.log("investAmount "+{investAmount})
     return res.json({
         message: "investAmount returned successfully",
         investAmount,
@@ -111,7 +111,7 @@ export const getAvailableDates = async (req, res) => {
                     availableDates.push(date);
                 }
             });
-        });
+        });   
         console.log("Available Dates:", availableDates);
 
         return res.json({
@@ -132,7 +132,7 @@ export const getAvailableDates = async (req, res) => {
 /* Goal */
 export const deleteGoal = async (req, res) => {
     try {
-
+        
         const userId = '645006320188d6681b4db8f4'; // Replace with your actual user ID
         const { goalId } = req.params;
 
@@ -162,32 +162,32 @@ export const deleteGoal = async (req, res) => {
         });
     }
 };
-export const getGoals = async (req, res) => {
+export const getGoals=async (req,res)=>{
     console.log("getGoals -> ");
-    try {
-        const user = await User.findById('645006320188d6681b4db8f4');
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        const goals = user.goals;
-        console.log(goals);
-        return res.json({
-            message: "Goals returned successfully",
-            goals,
-        });
-    } catch (error) {
-        console.error("Error fetching goals:", error);
-        return res.status(500).json({ message: "Internal server error" });
+try {
+    const user = await User.findById('645006320188d6681b4db8f4');
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
     }
+    const goals = user.goals;
+    console.log(goals);
+    return res.json({
+        message: "Goals returned successfully",
+        goals,
+    });
+} catch (error) {
+    console.error("Error fetching goals:", error);
+    return res.status(500).json({ message: "Internal server error" });
+}
 
 }
 export const insertGoals = async (req, res) => {
 
-    console.log("insert Goals");
-    const { user_id, name, amount, rate, description, collected, remaining, achieved, startDate, endDate } = req.body;
-
+    console.log("insert Goals"); 
+    const { user_id,name, amount,rate,description,collected,remaining,achieved,startDate,endDate } = req.body;
+    
     console.log(user_id)
-    if (!name || !amount || !rate) {
+    if (!name || !amount || !rate ) {
         return res.json({
             error: "Name, Amount, and rate are required",
         });
@@ -203,7 +203,7 @@ export const insertGoals = async (req, res) => {
             achieved,
             startDate,
             endDate,
-
+           
         })
         const user = await User.findById('645006320188d6681b4db8f4');
         // Check if the user was found
@@ -229,11 +229,11 @@ export const insertGoals = async (req, res) => {
         return res.status(500).json({
             error: "Internal Server Error",
         });
-    }
+    } 
 };
 export const updateGoals = async (req, res) => {
     console.log("updateGoals->")
-
+    
     const { newGoals } = req.body; // Assuming newInvestAmount is provided in the request body
 
     try {
@@ -255,14 +255,14 @@ export const updateGoals = async (req, res) => {
         console.error("Error updating investment amount:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
-
+        
 };
 
 ///////////////
 
-export const getYear = async (req, res) => {
+export const getYear=async (req,res)=>{
     const user = await User.findById('645006320188d6681b4db8f4')
-    const years = user.years
+    const years=user.years
     return res.json({
         message: "Incomes returned successfully",
         years,
@@ -271,10 +271,12 @@ export const getYear = async (req, res) => {
 
 /* Incomes  */
 export const getIncomes = async (req, res) => {
-
+ 
     try {
         const { user_id, yearNumber, monthNumber } = req.body;
-        console.log("getIncomes --> user_id " + user_id + " yearNumber " + yearNumber + " monthNumber " + monthNumber)
+        var strYearNumber=yearNumber+""
+        var strYearMonthNumber=monthNumber+""
+        console.log("getIncomes --> user_id "+user_id +" yearNumber "+strYearNumber +" monthNumber "+strYearMonthNumber)
         const user = await User.findById(user_id);
         if (!user) {
             return res.json({
@@ -283,7 +285,7 @@ export const getIncomes = async (req, res) => {
         }
         console.log("user id exist")
 
-        const year = user.years.find((y) => y.yearNumber == yearNumber);
+        const year = user.years.find((y) => y.yearNumber == strYearNumber);
         if (!year) {
             return res.json({
                 error: "Year not found",
@@ -291,7 +293,7 @@ export const getIncomes = async (req, res) => {
         }
         console.log("year is exist")
         console.log(year.months)
-        const month = year.months.find((m) => m.MonthNumber === monthNumber);
+        const month = year.months.find((m) => m.MonthNumber === strYearMonthNumber);
         if (!month) {
             console.error("month not exist")
             return res.json({
@@ -301,7 +303,7 @@ export const getIncomes = async (req, res) => {
         console.log("month is exist")
         console.log(month)
         const incomes = month.incomes;
-        console.log("return incomes" + incomes)
+        console.log("return incomes"+incomes)
         console.log(incomes)
         return res.json({
             message: "Incomes returned successfully",
@@ -314,80 +316,14 @@ export const getIncomes = async (req, res) => {
         });
     }
 };
-export const insertExpenses = async (req, res) => {
-    try {
-        const { user_id, name, tracked, budget, yearNumber, monthNumber } = req.body;
-
-        if (!name || !tracked || !budget || !yearNumber || !monthNumber) {
-            return res.json({
-                error: "Name, Tracked, Budget, YearNumber, and MonthNumber are required",
-            });
-        }
-
-        const user = await User.findById(user_id);
-        if (!user) {
-            return res.json({
-                error: "User not found",
-            });
-        }
-
-        const expense = new Expenses({
-            name,
-            tracked,
-            budget,
-        });
-
-        let year = user.years.find((y) => y.yearNumber == yearNumber);
-        // If the year is not found, create a new one
-        if (!year) {
-            console.log("create new year")
-            year = { yearNumber, months: [] };
-            const month = { MonthNumber: monthNumber, expenses: [expense] };
-            year.months.push(month);
-            user.years.push(year);
-            await user.save();
-            return res.json({
-                message: "Expense added successfully",
-                expense,
-            });
-        }
-
-        let month = year.months.find((m) => m.MonthNumber == monthNumber);
-
-        // If the month is not found, create a new one
-        if (!month) {
-            month = { MonthNumber: monthNumber, expenses: [expense] };
-            year.months.push(month);
-            await user.save();
-            return res.json({
-                message: "Expense added successfully",
-                expense,
-            });
-        }
-
-        month.expenses.push(expense);
-
-        await user.save();
-
-        return res.json({
-            message: "Expense added successfully",
-            expense,
-        });
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({
-            error: "Internal Server Error",
-        });
-    }
-};
 export const insertIncomes = async (req, res) => {
     console.log("insertIncomes- >")
     try {
-        const { user_id, yearNumber, monthNumber, name, amount, tracked } = req.body;
-console
+        const { user_id, yearNumber, monthNumber, name, amount,tracked} = req.body;
+
         if (!name || !amount || !tracked || !yearNumber || !monthNumber) {
             return res.json({
-                error: "Name, Amount, Tracked, YearNumber, and MonthNumber are required",
+                error: "Name, Amount, Percentage, Tracked, YearNumber, and MonthNumber are required",
             });
         }
 
@@ -397,13 +333,12 @@ console
                 error: "User not found",
             });
         }
-
+   
 
         const income = new Incomes({
             name,
             amount,
-            tracked,
-            
+            tracked
         });
 
         let year = user.years.find((y) => y.yearNumber == yearNumber);
@@ -414,16 +349,10 @@ console
             const month = { MonthNumber: monthNumber, incomes: [income] };
             year.months.push(month);
             user.years.push(year);
-            
             await user.save();
-            
-            console.log("insert to here")
-            return res.json({
-                message: "incomes added successfully",
-                income,
-            });
+            return
         }
-
+        
         let month = year.months.find((m) => m.MonthNumber == monthNumber);
 
         // If the month is not found, create a new one
@@ -431,18 +360,15 @@ console
             month = { MonthNumber: monthNumber, incomes: [income] };
             year.months.push(month);
             await user.save();
-            return res.json({
-                message: "incomes added successfully",
-                income,
-            });
+            return
         }
-
+       
         month.incomes.push(income);
-        await user.save();
+        await user.save();  
         return res.json({
             message: "income added successfully",
             income,
-        });
+        });  
     } catch (err) {
         console.log(err);
         return res.status(500).json({
@@ -455,7 +381,7 @@ export const updateAmount = async (req, res) => {
     try {
         const { incomeId } = req.params;
         const { newAmount, yearNumber, monthNumber } = req.body;
-        console.log("incomeId ", incomeId, " newAmount", newAmount)
+        console.log("incomeId ",incomeId," newAmount",newAmount)
 
         if (!newAmount || !yearNumber || !monthNumber) {
             return res.json({
@@ -514,7 +440,7 @@ export const deleteIncome = async (req, res) => {
     try {
         const { incomeId } = req.params;
         const userId = '645006320188d6681b4db8f4'; // Replace with your actual user ID
-        console.log("deleteIncome --> incomeId ", incomeId)
+        console.log("deleteIncome --> incomeId ",incomeId)
 
         // Find the user by ID
         const user = await User.findById(userId);
@@ -551,10 +477,10 @@ export const deleteIncome = async (req, res) => {
 
 /*  Expenses  */
 export const getExpenses = async (req, res) => {
-
+    
     try {
         const { user_id, yearNumber, monthNumber } = req.body;
-        console.log("user_id " + user_id + " yearNumber " + yearNumber + " monthNumber " + monthNumber)
+        console.log("user_id "+user_id +" yearNumber "+yearNumber +" monthNumber "+monthNumber)
         const user = await User.findById(user_id);
         if (!user) {
             return res.json({
@@ -580,7 +506,7 @@ export const getExpenses = async (req, res) => {
         }
         console.log("month is exist")
         const expenses = month.expenses;
-        console.log("return expenses" + expenses)
+        console.log("return expenses"+expenses)
         return res.json({
             message: "Expenses returned successfully",
             expenses,
@@ -592,12 +518,76 @@ export const getExpenses = async (req, res) => {
         });
     }
 };
+export const insertExpenses = async (req, res) => {
+    try {
+        const { user_id, name, tracked, budget, yearNumber, monthNumber } = req.body;
 
+        if (!name || !tracked || !budget || !yearNumber || !monthNumber) {
+            return res.json({
+                error: "Name, Tracked, Budget, YearNumber, and MonthNumber are required",
+            });
+        }
+
+        const user = await User.findById(user_id);
+        if (!user) {
+            return res.json({
+                error: "User not found",
+            });
+        }
+
+        const expense = new Expenses({
+            name,
+            tracked,
+            budget,
+        });
+
+        let year = user.years.find((y) => y.yearNumber == yearNumber);
+        // If the year is not found, create a new one
+        if (!year) {
+            console.log("create new year")
+            year = { yearNumber, months: [] };
+            const month = { MonthNumber: monthNumber, expenses: [expense] };
+            year.months.push(month);
+            user.years.push(year);
+            await user.save();
+            return res.json({
+                message: "Expense added successfully",
+                expense,
+            });
+        }
+        
+        let month = year.months.find((m) => m.MonthNumber == monthNumber);
+
+        // If the month is not found, create a new one
+        if (!month) {
+            month = { MonthNumber: monthNumber, expenses: [expense] };
+            year.months.push(month);
+            await user.save();
+            return res.json({
+                message: "Expense added successfully",
+                expense,
+            });
+        }
+
+        month.expenses.push(expense);
+
+        await user.save();
+
+        return res.json({
+            message: "Expense added successfully",
+            expense,
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            error: "Internal Server Error",
+        });
+    }
+};
 export const deleteExpense = async (req, res) => {
     try {
         const { expenseId } = req.params;
         const userId = '645006320188d6681b4db8f4'; // Replace with your actual user ID
-
 
         // Find the user by ID
         const user = await User.findById(userId);
@@ -630,11 +620,11 @@ export const deleteExpense = async (req, res) => {
     }
 };
 export const updateBudget = async (req, res) => {
-
+    
     try {
         const { expenseId } = req.params;
         const { newBudget, yearNumber, monthNumber } = req.body;
-        console.log("expenseId ", expenseId, " newBudget", newBudget)
+        console.log("expenseId ",expenseId," newBudget",newBudget)
 
         if (!newBudget || !yearNumber || !monthNumber) {
             return res.json({
@@ -719,6 +709,8 @@ export const signup = async (req, res) => {
                 error: "Email is taken",
             });
         }
+        const savings="0"
+        const investAmount="0"
         // hash password
         const hashedPassword = await hashPassword(password);
         try {
@@ -726,6 +718,8 @@ export const signup = async (req, res) => {
                 name,
                 email,
                 password: hashedPassword,
+                investAmount,
+                savings
             }).save();
             // create signed token
             const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
@@ -757,7 +751,7 @@ export const signin = async (req, res) => {
         }
         // check password
         const match = await comparePassword(password, user.password);
-        if (!match) {
+        if (!match) {   
             return res.json({
                 error: "Wrong password",
             });

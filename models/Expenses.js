@@ -11,9 +11,7 @@ const expensesSchema = new Schema(
             type: String,
             trim: true,
             required: true,
-            
-          
-        
+            unique: true,
         },
         budget: {
             type: String,
