@@ -232,30 +232,91 @@ export const insertGoals = async (req, res) => {
     } 
 };
 export const updateGoals = async (req, res) => {
-    console.log("updateGoals->")
+    console.log("updateGoals->");
     
-    const { newGoals } = req.body; // Assuming newInvestAmount is provided in the request body
+    const goalId = req.body.newGoals[0].goalid;
+    const collected = req.body.newGoals[0].collected;
+    const remaining = req.body.newGoals[0].remaining;
 
     try {
-        // Find the user by ID and update their investAmount
-        const user = await User.findByIdAndUpdate('645006320188d6681b4db8f4', { goals: newGoals }, { new: true });
+        // Check if the user exists
+        const user = await User.findById('645006320188d6681b4db8f4'); // Update with the actual user ID
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
+        // Find the goal by its ID within the user's goals array
+        const goal = user.goals.find(goal => goal._id.toString() === goalId);
+
+        if (!goal) {
+            return res.status(404).json({ message: "Goal not found" });
+        }
+
+        // Update the collected and remaining fields of the goal
+        goal.collected = collected;
+        goal.remaining = remaining;
+
+        // Save the updated user object
+        await user.save();
+
         return res.json({
-            message: "Investment amount updated successfully",
-            user: {
-                id: user._id,
-                goals: user.goals
+            message: "Goal updated successfully",
+            goal: {
+                id: goal._id,
+                collected: goal.collected,
+                remaining: goal.remaining
             }
         });
     } catch (error) {
-        console.error("Error updating investment amount:", error);
+        console.error("Error updating goal:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
-        
+};
+
+export const updateGoalsMangement = async (req, res) => {
+    console.log("updateGoalsMangement->");
+    const goalMangement =req.body;
+    console.log(goalMangement)
+    
+     const goalId = req.body.newGoals._id;
+     const collected = req.body.newGoals.collected;
+    const remaining = req.body.newGoals.remaining;
+
+    try {
+        // Check if the user exists
+        const user = await User.findById('645006320188d6681b4db8f4'); // Update with the actual user ID
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Find the goal by its ID within the user's goals array
+        const goal = user.goals.find(goal => goal._id.toString() === goalId);
+
+        if (!goal) {
+            return res.status(404).json({ message: "Goal not found" });
+        }
+
+        // Update the collected and remaining fields of the goal
+        goal.collected = collected;
+        goal.remaining = remaining;
+
+        // Save the updated user object
+        await user.save();
+
+        return res.json({
+            message: "Goal updated successfully",
+            goal: {
+                id: goal._id,
+                collected: goal.collected,
+                remaining: goal.remaining
+            }
+        });
+    } catch (error) {
+        console.error("Error updating goal:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
 };
 
 ///////////////
@@ -661,7 +722,7 @@ export const updateBudget = async (req, res) => {
         }
 
         // Update the budget value
-        expense.budget = newBudget;
+        expense.tracked = newBudget;
 
         // Save the user document with the updated budget
         await user.save();
